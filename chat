@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+	<title>ChatGPT Demo</title>
+</head>
+<body>
+	<h1>ChatGPT Demo</h1>
+	<form>
+		<input type="text" name="message" placeholder="请输入您的问题或对话内容...">
+		<button type="submit">发送</button>
+	</form>
+	<div id="response"></div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$("form").submit(function(e) {
+			e.preventDefault(); // 防止表单提交刷新页面
+
+			// 获取用户输入的对话内容
+			var message = $("input[name='message']").val();
+
+			// 发送请求到ChatGPT API
+			$.ajax({
+				url: "https://api.openai.com/v1/engines/davinci-codex/completions",
+				method: "POST",
+				headers: {
+					"Authorization": "Bearer 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",
+					"Content-Type": "application/json"
+				},
+				data: JSON.stringify({
+					prompt: message,
+					max_tokens: 50,
+					n: 1,
+					stop: "\n"
+				}),
+				success: function(response) {
+					// 显示API返回的响应
+					$("#response").text(response.choices[0].text);
+				},
+				error: function() {
+					alert("API请求失败，请检查您的API密钥和网络连接。");
+				}
+			});
+		});
+	</script>
+</body>
+</html>
